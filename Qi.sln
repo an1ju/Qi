@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qi.NetFly", "Qi.NetFly\Qi.NetFly.csproj", "{575C6E54-CE16-4D4D-8CE2-1291D5C86A69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qi.NetFly.Core", "Qi.NetFly.Core\Qi.NetFly.Core.csproj", "{8C83738F-3A61-4383-A4A3-C612FE63EA6D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{575C6E54-CE16-4D4D-8CE2-1291D5C86A69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{575C6E54-CE16-4D4D-8CE2-1291D5C86A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{575C6E54-CE16-4D4D-8CE2-1291D5C86A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{575C6E54-CE16-4D4D-8CE2-1291D5C86A69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C83738F-3A61-4383-A4A3-C612FE63EA6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C83738F-3A61-4383-A4A3-C612FE63EA6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C83738F-3A61-4383-A4A3-C612FE63EA6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C83738F-3A61-4383-A4A3-C612FE63EA6D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {11C1DD2F-0692-401D-A913-9EF69DC0D003}
+	EndGlobalSection
+EndGlobal
