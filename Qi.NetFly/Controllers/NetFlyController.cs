@@ -23,6 +23,8 @@ namespace Qi.NetFly.Controllers
             return new string[] { "Yes", "You can fly on net.", s.ServiceIsRun().ToString() };
         }
 
+        #region 常用方法接口
+
         [HttpGet("Run")]
         public string Run()
         {
@@ -40,5 +42,17 @@ namespace Qi.NetFly.Controllers
             s.Stop();
             s.Run();
         }
+        [HttpGet("GetServiceStatus")]
+        public bool GetServiceStatus()
+        {
+            return s.ServiceIsRun();
+        }
+        [HttpGet("GetCount")]
+        public int GetCount()
+        {
+            return s.GetConnectCount();
+        }
+        #endregion
+
     }
 }

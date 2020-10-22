@@ -14,11 +14,11 @@ namespace Qi.NetFly.Controllers
     {
         // GET: api/<AboutController>
         [HttpGet]
-        public Qi.NetFly.Core.Model.Author Get()
+        public IEnumerable<Qi.NetFly.Core.Model.Author> Get()
         {
-            return new Qi.NetFly.Core.Model.Author();
+            return new Qi.NetFly.Core.Model.Author[] { new Qi.NetFly.Core.Model.Author() };
         }
 
-        
+
     }
 }

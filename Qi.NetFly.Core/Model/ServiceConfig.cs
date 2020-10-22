@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Qi.NetFly.Core.Model
+﻿namespace Qi.NetFly.Core.Model
 {
     /// <summary>
     /// 服务器端配置项
@@ -10,7 +6,7 @@ namespace Qi.NetFly.Core.Model
     public class ServiceConfig
     {
         /// <summary>
-        /// IP地址
+        /// IP地址，这个IP作用不大，将来应该使用的是域名。
         /// </summary>
         public string ServiceIP { get; set; } = "127.0.0.1";
         /// <summary>
