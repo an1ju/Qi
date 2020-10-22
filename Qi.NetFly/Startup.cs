@@ -26,6 +26,8 @@ namespace Qi.NetFly
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddSingleton(new Qi.NetFly.Core.Service()); // 直接注入实例
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

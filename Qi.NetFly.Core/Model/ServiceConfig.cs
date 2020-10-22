@@ -9,7 +9,21 @@ namespace Qi.NetFly.Core.Model
     /// </summary>
     public class ServiceConfig
     {
+        /// <summary>
+        /// IP地址
+        /// </summary>
         public string ServiceIP { get; set; } = "127.0.0.1";
-        public int ServicePort { get; set; } = 2020;
+        /// <summary>
+        /// 端口号
+        /// </summary>
+        public ushort ServicePort { get; set; } = 2020;
+        /// <summary>
+        /// 服务器最大连接数
+        /// </summary>
+        public ushort ServiceMaxConnectCount { get; set; } = 30;
+        /// <summary>
+        /// 服务启动时，是否自动启动监控服务：默认自动
+        /// </summary>
+        public bool ServiceAutoRun { get; set; } = true;
     }
 }

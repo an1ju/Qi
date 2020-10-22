@@ -1,7 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Company>电子信息产业不</Company>
+    <Authors>an1ju@163.com</Authors>
+    <Description>实现内网穿透功能。</Description>
+    <RepositoryUrl>https://github.com/an1ju/Qi</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Qi.NetFly.TcpCSFramework\Qi.NetFly.TcpCSFramework.csproj" />
+  </ItemGroup>
 
 </Project>
