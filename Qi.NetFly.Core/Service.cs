@@ -99,8 +99,10 @@ namespace Qi.NetFly.Core
 
         private void ClientClose(object sender, NetEventArgs e)
         {
-            //throw new NotImplementedException();
+            RemoveClientConfig(e);//断开后清理内存
         }
+
+
 
         private void RecvData(object sender, NetEventArgs e)
         {
@@ -211,6 +213,8 @@ namespace Qi.NetFly.Core
             {
                 //没找到，添加一个。
                 ClientConfig item = new ClientConfig();
+                item.SecretKey = data.SecretKey;
+                item.Session = e.Client;
                 ChaYiGengXin(ref item.LAN_list, data.LAN_list);
                 All_clientList_Config.Add(item);
 
@@ -313,6 +317,28 @@ namespace Qi.NetFly.Core
                     }
                 }
                 
+            }
+
+
+        }
+
+        /// <summary>
+        /// 断开后清理：断开后清理内存
+        /// </summary>
+        /// <param name="e"></param>
+        private void RemoveClientConfig(NetEventArgs e)
+        {
+            bool canfind = false;
+            for (int i = 0; i < All_clientList_Config.Count; i++)
+            {
+                if (e.Client.ClientSocket.RemoteEndPoint == All_clientList_Config[i].Session.ClientSocket.RemoteEndPoint)
+                {
+                    canfind = true;
+
+                    All_clientList_Config[i].LAN_list.Clear();
+                    All_clientList_Config.RemoveAt(i);
+
+                }
             }
 
 
