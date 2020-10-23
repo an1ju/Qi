@@ -12,7 +12,15 @@ namespace Qi.NetFly.Client
         
         static void Main(string[] args)
         {
-            Qi.NetFly.Core.Client client = new Core.Client();
+            try
+            {
+
+                Qi.NetFly.Core.Client client = new Core.Client();
+            }
+            catch (Exception ee)
+            {
+
+            }
             Console.WriteLine("Hello World!");
             Console.ReadLine();
         }

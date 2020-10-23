@@ -3,6 +3,7 @@ using Qi.NetFly.TcpCSFramework;
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Timers;
 
 namespace Qi.NetFly.Core
 {
@@ -11,7 +12,7 @@ namespace Qi.NetFly.Core
         /// <summary>
         /// 服务器IP
         /// </summary>
-        public string Service_IP { get; set; } = "127.0.0.1";
+        public string Service_IP { get; set; } = "192.168.99.93";
         /// <summary>
         /// 服务器端口号
         /// </summary>
@@ -28,12 +29,50 @@ namespace Qi.NetFly.Core
         private TcpCli cli = null;
 
         /// <summary>
+        /// 状态消息：默认初始化
+        /// 后续会有：正常、连接失败、消息发送失败  这类提示信息，供调用者查看。
+        /// 2020年10月23日10:19:55
+        /// </summary>
+        public string StatusMessage = "初始化";
+        /// <summary>
+        /// 定时检测连接，发送客户端内网 标注的信息。
+        /// 没连接就连接，已连接就发送内网结构配置。
+        /// </summary>
+        private Timer timer_Connect = null;
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         public Client()
         {
             Initialization();
             MakeConnectWithListener();
+
+            timer_Connect = new Timer(10000);
+            timer_Connect.Elapsed += Timer_Connect_Elapsed;
+            timer_Connect.Start();
+        }
+        private void Timer_Connect_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (!cli.IsConnected)
+            {
+                try
+                {
+                    cli.Connect(Service_IP, Service_Port);
+                    StatusMessage = "已连接";
+                }
+                catch (Exception)
+                {
+                    StatusMessage = "连接远程服务器失败";
+                    cli.Close();
+                }
+            }
+            else
+            {
+
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(This_clientConfig);
+                cli.Send(json);
+            }
         }
 
         #region 封装内部处理
@@ -54,6 +93,7 @@ namespace Qi.NetFly.Core
             temp2.Port = 80;
             This_clientConfig.LAN_list.Add(temp2);
 
+
         }
         /// <summary>
         /// 构建连接
@@ -62,16 +102,28 @@ namespace Qi.NetFly.Core
         {
             cli = new TcpCli(new Coder(Coder.EncodingMothord.UTF8));
 
-            cli.Resovlver = new DatagramResolver("]}");
+            // cli.Resovlver = new DatagramResolver("]}");
             cli.ReceivedDatagram += new NetEvent(RecvData);
             cli.DisConnectedServer += new NetEvent(ClientClose);
             cli.ConnectedServer += new NetEvent(ClientConn);
 
-
-            cli.Connect(Service_IP, Service_Port);
-            System.Threading.Thread.Sleep(2000);
-            cli.Send("wo shi qizhuhua");
+            if (!cli.IsConnected) // 启动就连接
+            {
+                try
+                {
+                    cli.Connect(Service_IP, Service_Port);
+                    StatusMessage = "已连接";
+                }
+                catch (Exception ex)
+                {
+                    StatusMessage = "连接远程服务器失败";
+                    cli.Close();
+                }
+            }
+            
         }
+
+        
 
         private void ClientConn(object sender, NetEventArgs e)
         {
@@ -80,7 +132,7 @@ namespace Qi.NetFly.Core
 
         private void ClientClose(object sender, NetEventArgs e)
         {
-            
+            cli.Close();
         }
 
         private void RecvData(object sender, NetEventArgs e)
