@@ -20,7 +20,7 @@
 ### 配置参数（暂定）
 
 ```
-/// <summary>
+    /// <summary>
     /// 服务器端配置项
     /// </summary>
     public class ServiceConfig
