@@ -14,5 +14,10 @@ namespace UnitTest_Qi_NetFly_Core
             Qi.NetFly.Core.Service s = new Qi.NetFly.Core.Service();
         }
 
+        [TestMethod("客户端控制台测试程序启动")]
+        public void TestMethod2()
+        {
+            Qi.NetFly.Core.Client s = new Qi.NetFly.Core.Client();
+        }
     }
 }

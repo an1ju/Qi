@@ -10,7 +10,7 @@ namespace Qi.NetFly.Core
     /// 内网穿透服务器端。整体封装。
     /// 2020年10月22日15:43:34
     /// </summary>
-    public class Service
+    public class Service:IDisposable
     {
 
         private Hashtable m_ChannelSock = new Hashtable();
@@ -37,6 +37,15 @@ namespace Qi.NetFly.Core
             MakeServiceInitialization();
             MakeListener();
         }
+
+        public void Dispose()
+        {
+            if (svr.IsRun)
+            {
+                svr.Stop();
+            }
+        }
+        
 
         #region 封装内部处理
         /// <summary>
@@ -132,6 +141,8 @@ namespace Qi.NetFly.Core
         {
             return svr.SessionCount;
         }
+
+
 
         #endregion
     }

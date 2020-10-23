@@ -8,9 +8,13 @@ namespace Qi.NetFly.Client
     /// </summary>
     class Program
     {
+
+        
         static void Main(string[] args)
         {
+            Qi.NetFly.Core.Client client = new Core.Client();
             Console.WriteLine("Hello World!");
+            Console.ReadLine();
         }
     }
 }
