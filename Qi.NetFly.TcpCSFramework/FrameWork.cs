@@ -217,6 +217,14 @@ namespace Qi.NetFly.TcpCSFramework
 
         }
 
+        public ushort Port
+        {
+            get
+            {
+                return _port;
+            }
+        }
+
         #endregion
 
         #region 公有方法

@@ -10,7 +10,7 @@ namespace Qi.NetFly.Core
     /// 内网穿透服务器端。整体封装。
     /// 2020年10月22日15:43:34
     /// </summary>
-    public class Service:IDisposable
+    public class Service : IDisposable
     {
 
         private Hashtable m_ChannelSock = new Hashtable();
@@ -25,9 +25,13 @@ namespace Qi.NetFly.Core
         /// </summary>
         private ServiceConfig This_service_Config = new ServiceConfig();
         /// <summary>
-        /// 多个客户端：连接到此计算机的通信配置信息
+        /// 多个户端客：连接到此计算机的通信配置信息
         /// </summary>
         private List<ClientConfig> All_clientList_Config = new List<ClientConfig>();
+
+        private List<ServicePort> PortsForListing = new List<ServicePort>();
+
+
 
         /// <summary>
         /// 构造函数
@@ -47,7 +51,7 @@ namespace Qi.NetFly.Core
                 svr.Stop();
             }
         }
-        
+
 
         #region 封装内部处理
         /// <summary>
@@ -112,6 +116,7 @@ namespace Qi.NetFly.Core
 
                 string key = MakeDataTCP(e, temp);//查询或保存归我们管理的连接
 
+                CreateServicePort(key, temp);
 
                 svr.Send(e.Client, "数据已收到");
             }
@@ -273,7 +278,7 @@ namespace Qi.NetFly.Core
             {
                 //最麻烦的就是这个了，差异化。
                 int maxNum = _old.Count > _new.Count ? _old.Count : _new.Count;//取个大数
-                int minNum = _old.Count > _new.Count ?  _new.Count:_old.Count ;//取个小数
+                int minNum = _old.Count > _new.Count ? _new.Count : _old.Count;//取个小数
 
                 if (_old.Count <= _new.Count)
                 {
@@ -316,11 +321,12 @@ namespace Qi.NetFly.Core
                         _old.RemoveAt(removeIndexS[i]);
                     }
                 }
-                
+
             }
 
-
         }
+
+
 
         /// <summary>
         /// 断开后清理：断开后清理内存
@@ -334,6 +340,8 @@ namespace Qi.NetFly.Core
                 if (e.Client.ClientSocket.RemoteEndPoint == All_clientList_Config[i].Session.ClientSocket.RemoteEndPoint)
                 {
                     canfind = true;
+                    string key = All_clientList_Config[i].SecretKey; // 要用这个关闭服务器端待收数据端口
+                    CloseServicePort(key);
 
                     All_clientList_Config[i].LAN_list.Clear();
                     All_clientList_Config.RemoveAt(i);
@@ -343,6 +351,162 @@ namespace Qi.NetFly.Core
 
 
         }
+        /// <summary>
+        /// 关闭端口
+        /// </summary>
+        /// <param name="key"></param>
+        private void CloseServicePort(string key)
+        {
+            List<int> removeIndexs = new List<int>(); 
+
+            for (int i = 0; i < PortsForListing.Count; i++)
+            {
+                if (PortsForListing[i].Key == key)
+                {
+                    //关闭该关掉的端口
+                    if (PortsForListing[i].Port.IsRun)
+                    {
+                        PortsForListing[i].Port.CloseAllClient();
+                        PortsForListing[i].Port.Stop();
+                    }
+
+                    removeIndexs.Insert(0, i);
+                }
+            }
+
+            for (int i = 0; i < removeIndexs.Count; i++)
+            {
+                PortsForListing.RemoveAt(removeIndexs[i]);
+            }
+        }
+
+        private void CreateServicePort(string key, ClientConfig clientConfig)
+        {
+            //TcpSvr svr = new TcpSvr(clientConfig.p, This_service_Config.ServiceMaxConnectCount, new Coder(Coder.EncodingMothord.UTF8));
+
+            //1 查个数
+            int count = ChaGeShu(key);
+            if (count == 0)
+            {
+                // 开端口
+                for (int i = 0; i < clientConfig.LAN_list.Count; i++)
+                {
+                    ServicePort temp = new ServicePort();
+                    temp.Key = key;
+                    temp.Client = clientConfig.Session;
+                    temp.Lan = clientConfig.LAN_list[i];
+
+                    ushort port = MakePortForClient(); // 这里要内部做一个分配端口的方法。
+                    temp.Port = new TcpSvr(port, 25, new Coder(Coder.EncodingMothord.UTF8));
+
+                    //处理客户端连接数已满事件
+                    temp.Port.ServerFull += new NetEvent(clientServerFull);
+                    //处理新客户端连接事件
+                    temp.Port.ClientConn += new NetEvent(clientClientConn);
+                    //处理客户端关闭事件
+                    temp.Port.ClientClose += new NetEvent(clientClientClose);
+                    //处理接收到数据事件
+                    temp.Port.RecvData += new NetEvent(clientRecvData);
+
+                    if (!temp.Port.IsRun)
+                    {
+                        temp.Port.Start();
+                    }
+
+                    PortsForListing.Add(temp);
+                }
+            }
+            else
+            {
+                //2 对比
+                if (count == clientConfig.LAN_list.Count)
+                {
+                    //不动
+                }
+                else
+                {
+                    //清除后，重新开。
+                    CloseServicePort(key);
+                    CreateServicePort(key, clientConfig);
+                }
+            }
+            
+        }
+
+
+        private ushort MakePortForClient()
+        {
+            ushort[] WhatWeHave = new ushort[] { 9966, 8868, 9205 };
+
+            int index = -1;
+            //查询一下当前没被占用的端口
+            for (int i = 0; i < WhatWeHave.Length; i++)
+            {
+                bool thisCanUse = true;
+                for (int iPorts = 0; iPorts < PortsForListing.Count; iPorts++)
+                {
+                    if (PortsForListing[iPorts].Port.Port== WhatWeHave[i])
+                    {
+                        thisCanUse = false;
+                        break;
+                    }
+                }
+
+                if (thisCanUse)
+                {
+                    index = i;
+                    break;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            return WhatWeHave[index];
+        }
+
+        #region 内部开放端口事件
+
+        private void clientServerFull(object sender, NetEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void clientClientConn(object sender, NetEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void clientClientClose(object sender, NetEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void clientRecvData(object sender, NetEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+        #endregion
+
+        /// <summary>
+        /// 查个数：某个key 在内部总共分配了多少个端口
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private int ChaGeShu(string key)
+        {
+            int r = 0;
+            for (int i = 0; i < PortsForListing.Count; i++)
+            {
+                if (PortsForListing[i].Key == key)
+                {
+                    r++;
+                }
+            }
+            return r;
+        }
+
 
         #endregion
     }

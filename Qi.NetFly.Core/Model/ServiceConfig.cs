@@ -1,4 +1,6 @@
-﻿namespace Qi.NetFly.Core.Model
+﻿using Qi.NetFly.TcpCSFramework;
+
+namespace Qi.NetFly.Core.Model
 {
     /// <summary>
     /// 服务器端配置项
@@ -21,5 +23,17 @@
         /// 服务启动时，是否自动启动监控服务：默认自动
         /// </summary>
         public bool ServiceAutoRun { get; set; } = true;
+    }
+
+
+    public class ServicePort
+    {
+        public string Key { get; set; }
+        public TcpSvr Port { get; set; }
+
+        public Session Client { get; set; }
+
+        public Qi_LAN_Setting Lan { get; set; }
+
     }
 }
