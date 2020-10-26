@@ -13,4 +13,13 @@ namespace Qi.NetFly.Core.Model
         FTP,
         SSH
     }
+
+    public class MessageForClient
+    {
+        public string MsgID { get; set; }
+        public MessageType MessageType { get; set; }
+        public string IP { get; set; }
+        public int Port { get; set; }
+        public string Content { get; set; }
+    }
 }

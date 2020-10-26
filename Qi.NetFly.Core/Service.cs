@@ -113,6 +113,7 @@ namespace Qi.NetFly.Core
             try
             {
                 ClientConfig temp = Newtonsoft.Json.JsonConvert.DeserializeObject<ClientConfig>(e.Client.Datagram);
+                temp.Session = e.Client;
 
                 string key = MakeDataTCP(e, temp);//查询或保存归我们管理的连接
 
@@ -485,7 +486,45 @@ namespace Qi.NetFly.Core
 
         private void clientRecvData(object sender, NetEventArgs e)
         {
-            //throw new NotImplementedException();
+            //1.看看，哪个端口发来的数据。
+            TcpSvr CustomerInClientPort = (TcpSvr)sender; //外网用户连接到我们的哪个端口了。
+            //2.找对应的Session
+            int customerIndex = -1;
+            for (int i = 0; i < PortsForListing.Count; i++)
+            {
+                if (PortsForListing[i].Port.Port== CustomerInClientPort.Port)
+                {
+                    //找到了
+                    customerIndex = i;
+                    // Session session = PortsForListing[i].Client; //客户端的信息，一会用
+                    // PortsForListing[i].Lan; // 客户端要连接的内网 ip和端口，一会用
+                    break;
+                }
+            }
+            ////3.找目标IP PORT TYPE
+            //int clientIndex = -1;
+            //for (int i = 0; i < All_clientList_Config.Count; i++)
+            //{
+            //    if (All_clientList_Config[i].Session.ID== PortsForListing[customerIndex].Client.ID)
+            //    {
+            //        clientIndex = i;
+            //        break;
+            //    }
+            //}
+
+            //4.去客户端抓取内容
+            MessageForClient messageForClient = new MessageForClient();
+            messageForClient.MsgID= Guid.NewGuid().ToString();
+            messageForClient.MessageType = PortsForListing[customerIndex].Lan.Type;
+            messageForClient.IP = PortsForListing[customerIndex].Lan.IP;
+            messageForClient.Port = PortsForListing[customerIndex].Lan.Port;
+            messageForClient.Content = e.Client.Datagram;
+
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(messageForClient);
+
+            svr.Send(PortsForListing[customerIndex].Client, json); //此处待补充 ：2020年10月26日16:01:01
+            
+            
         }
         #endregion
 
