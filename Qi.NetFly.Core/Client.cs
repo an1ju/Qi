@@ -137,6 +137,10 @@ namespace Qi.NetFly.Core
 
         private void RecvData(object sender, NetEventArgs e)
         {
+            if (e.Client.Datagram.EndsWith("}"))
+            {
+                MessageForClient temp = Newtonsoft.Json.JsonConvert.DeserializeObject<MessageForClient>(e.Client.Datagram);
+            }
             
         }
         #endregion
