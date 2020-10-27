@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Qi.NetFly.Core.Model
+﻿namespace Qi.NetFly.Core.Model
 {
     /// <summary>
     /// 消息类型，客户端定义，从服务端下发命令，由客户端执行。
@@ -22,4 +18,8 @@ namespace Qi.NetFly.Core.Model
         public int Port { get; set; }
         public string Content { get; set; }
     }
+
+
+
+
 }

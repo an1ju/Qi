@@ -18,6 +18,10 @@ namespace Qi.NetFly.Core.Model
         public Session Session { get; set; } = null; 
 
         public List<Qi_LAN_Setting> LAN_list = new List<Qi_LAN_Setting>();
+        /// <summary>
+        /// 向服务器转发回来的数据，平时都是null，只有回发的时候才有数据。
+        /// </summary>
+        public TransportToService TransportToService = null;
     }
 
     public class Qi_LAN_Setting
@@ -25,5 +29,13 @@ namespace Qi.NetFly.Core.Model
         public MessageType Type { get; set; } = MessageType.WEB;
         public string IP { get; set; }
         public int Port { get; set; }
+    }
+    /// <summary>
+    /// 向服务器端运输数据
+    /// </summary>
+    public class TransportToService
+    {
+        public string MsgID { get; set; }
+        public string Content { get; set; }
     }
 }

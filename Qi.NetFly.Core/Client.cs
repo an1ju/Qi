@@ -84,13 +84,15 @@ namespace Qi.NetFly.Core
             This_clientConfig.SecretKey = "qizhuhua";
 
             Qi_LAN_Setting temp1 = new Qi_LAN_Setting();
+            temp1.Type = MessageType.WEB;
             temp1.IP = "192.168.99.93";
             temp1.Port = 5002;
             This_clientConfig.LAN_list.Add(temp1);
 
             Qi_LAN_Setting temp2 = new Qi_LAN_Setting();
+            temp2.Type = MessageType.SSH;
             temp2.IP = "192.168.99.93";
-            temp2.Port = 80;
+            temp2.Port = 22;
             This_clientConfig.LAN_list.Add(temp2);
 
 
@@ -140,10 +142,70 @@ namespace Qi.NetFly.Core
             if (e.Client.Datagram.EndsWith("}"))
             {
                 MessageForClient temp = Newtonsoft.Json.JsonConvert.DeserializeObject<MessageForClient>(e.Client.Datagram);
+
+                singIn.Add(e.Client, temp.MsgID,null);
+                // 收到消息，要进行处理
+                Dispatch(temp);
+
+
             }
-            
+
         }
+
+
         #endregion
 
+        private SignIn singIn = new SignIn();
+        /// <summary>
+        /// 处理消息
+        /// </summary>
+        /// <param name="temp"></param>
+        private void Dispatch(MessageForClient customer)
+        {
+            switch (customer.MessageType)
+            {
+                case MessageType.WEB:
+                    {
+                        TcpCli client = new TcpCli(new Coder(Coder.EncodingMothord.UTF8));
+                        client.ReceivedDatagram += new NetEvent(ccRecvData);
+                        client.Connect(customer.IP, customer.Port);
+                        
+
+                        System.Threading.Thread.Sleep(500);
+                        client.Send(customer.Content);
+                    }
+                    break;
+                case MessageType.FTP:
+                    break;
+                case MessageType.SSH:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ccRecvData(object sender, NetEventArgs e)
+        {
+            if (singIn.TongXunLu.Count > 0)
+            {
+                This_clientConfig.TransportToService = new TransportToService();
+                This_clientConfig.TransportToService.MsgID = singIn.TongXunLu[0].MsgID;
+                This_clientConfig.TransportToService.Content = e.Client.Datagram;
+
+                try
+                {
+                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(This_clientConfig);
+                    cli.Send(json);
+                    This_clientConfig.TransportToService = null;
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+
+                singIn.TongXunLu.RemoveAt(0);
+            }
+        }
     }
 }

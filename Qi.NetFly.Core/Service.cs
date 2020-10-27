@@ -119,6 +119,12 @@ namespace Qi.NetFly.Core
 
                 CreateServicePort(key, temp);
 
+                if (temp.TransportToService !=null)
+                {
+                    //有转发数据了
+                    ShuJuHuiFa(temp);
+
+                }
                 svr.Send(e.Client, "数据已收到");
             }
             catch (Exception ex)
@@ -129,6 +135,8 @@ namespace Qi.NetFly.Core
             }
 
         }
+
+        
 
         #endregion
 
@@ -514,7 +522,7 @@ namespace Qi.NetFly.Core
 
             //4.去客户端抓取内容
             MessageForClient messageForClient = new MessageForClient();
-            messageForClient.MsgID= Guid.NewGuid().ToString();
+            messageForClient.MsgID = Guid.NewGuid().ToString();
             messageForClient.MessageType = PortsForListing[customerIndex].Lan.Type;
             messageForClient.IP = PortsForListing[customerIndex].Lan.IP;
             messageForClient.Port = PortsForListing[customerIndex].Lan.Port;
@@ -522,11 +530,41 @@ namespace Qi.NetFly.Core
 
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(messageForClient);
 
+            singIn.Add(PortsForListing[customerIndex].Client, messageForClient.MsgID, e.Client);
             svr.Send(PortsForListing[customerIndex].Client, json); //此处待补充 ：2020年10月26日16:01:01
             
             
         }
         #endregion
+
+
+        private SignIn singIn = new SignIn();
+        private void ShuJuHuiFa(ClientConfig clientZhuanFa)
+        {
+            //1.找msgID
+            for (int i = 0; i < singIn.TongXunLu.Count; i++)
+            {
+                if (singIn.TongXunLu[i].MsgID == clientZhuanFa.TransportToService.MsgID)
+                {
+                    //2.找外网连接，从【PortsForListing】里面找
+                    for (int iPorts = 0; iPorts < PortsForListing.Count; iPorts++)
+                    {
+                        if (PortsForListing[iPorts].Client.ID== singIn.TongXunLu[i].ClientSession.ID)
+                        {
+                            PortsForListing[iPorts].Port.Send(singIn.TongXunLu[i].CustomerSession, clientZhuanFa.TransportToService.Content);
+                            break;
+                        }
+                    }
+
+                    //svr.Send(singIn.TongXunLu[i].Session, clientZhuanFa.TransportToService.Content);
+                    //singIn.Remove(clientZhuanFa.TransportToService.MsgID);
+                    singIn.TongXunLu.RemoveAt(i);
+                    break;
+
+                }
+            }
+        }
+
 
         /// <summary>
         /// 查个数：某个key 在内部总共分配了多少个端口
