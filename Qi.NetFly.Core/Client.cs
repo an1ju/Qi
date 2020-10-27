@@ -187,11 +187,15 @@ namespace Qi.NetFly.Core
                             client.Connect(customer.IP, customer.Port);
                             //System.Threading.Thread.Sleep(500);
                         }
-                        
-                        
 
-                        
+
+                        int run1ci = 0;
+                        while (!client.IsConnected)
+                        {
+                            System.Threading.Thread.Sleep(10);
+                        }
                         client.Send(customer.Content);
+
                     }
                     break;
                 case MessageType.FTP:
