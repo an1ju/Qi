@@ -90,9 +90,9 @@ namespace Qi.NetFly.Core
             This_clientConfig.LAN_list.Add(temp1);
 
             Qi_LAN_Setting temp2 = new Qi_LAN_Setting();
-            temp2.Type = MessageType.SSH;
+            temp2.Type = MessageType.WEB;
             temp2.IP = "192.168.99.93";
-            temp2.Port = 22;
+            temp2.Port = 3389;
             This_clientConfig.LAN_list.Add(temp2);
 
 
@@ -104,7 +104,7 @@ namespace Qi.NetFly.Core
         {
             cli = new TcpCli(new Coder(Coder.EncodingMothord.UTF8));
 
-            // cli.Resovlver = new DatagramResolver("]}");
+            //cli.Resovlver = new DatagramResolver("}");
             cli.ReceivedDatagram += new NetEvent(RecvData);
             cli.DisConnectedServer += new NetEvent(ClientClose);
             cli.ConnectedServer += new NetEvent(ClientConn);
@@ -137,17 +137,28 @@ namespace Qi.NetFly.Core
             cli.Close();
         }
 
+
         private void RecvData(object sender, NetEventArgs e)
         {
-            if (e.Client.Datagram.EndsWith("}"))
+            try
             {
-                MessageForClient temp = Newtonsoft.Json.JsonConvert.DeserializeObject<MessageForClient>(e.Client.Datagram);
+                //if (e.Client.Datagram.EndsWith("}")&& e.Client.Datagram.StartsWith("{"))
+                if (e.Client.Datagram!= "数据已收到")
+                {
 
-                singIn.Add(e.Client, temp.MsgID,null);
-                // 收到消息，要进行处理
-                Dispatch(temp);
+                    MessageForClient temp = Newtonsoft.Json.JsonConvert.DeserializeObject<MessageForClient>(e.Client.Datagram);
+
+                    singIn.Add(e.Client, temp.MsgID, null);
+                    // 收到消息，要进行处理
+                    Dispatch(temp);
 
 
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                //throw;
             }
 
         }
@@ -168,10 +179,18 @@ namespace Qi.NetFly.Core
                     {
                         TcpCli client = new TcpCli(new Coder(Coder.EncodingMothord.UTF8));
                         client.ReceivedDatagram += new NetEvent(ccRecvData);
-                        client.Connect(customer.IP, customer.Port);
+                        client.DisConnectedServer += new NetEvent(ccClientClose);
+                        client.ConnectedServer += new NetEvent(ccClientConn);
+
+                        if (!client.IsConnected)
+                        {
+                            client.Connect(customer.IP, customer.Port);
+                            //System.Threading.Thread.Sleep(500);
+                        }
+                        
                         
 
-                        System.Threading.Thread.Sleep(500);
+                        
                         client.Send(customer.Content);
                     }
                     break;
@@ -182,6 +201,16 @@ namespace Qi.NetFly.Core
                 default:
                     break;
             }
+        }
+
+        private void ccClientConn(object sender, NetEventArgs e)
+        {
+            
+        }
+
+        private void ccClientClose(object sender, NetEventArgs e)
+        {
+            e.Client.Close();
         }
 
         private void ccRecvData(object sender, NetEventArgs e)

@@ -125,7 +125,7 @@ namespace Qi.NetFly.Core
                     ShuJuHuiFa(temp);
 
                 }
-                svr.Send(e.Client, "数据已收到");
+                //svr.Send(e.Client, "数据已收到");
             }
             catch (Exception ex)
             {
