@@ -1,6 +1,7 @@
 ﻿using Qi.NetFly.Core.Model;
 using Qi.NetFly.TcpCSFramework;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Timers;
@@ -137,9 +138,10 @@ namespace Qi.NetFly.Core
             cli.Close();
         }
 
-
+        List<string> cc = new List<string>();
         private void RecvData(object sender, NetEventArgs e)
         {
+            cc.Add(e.Client.Datagram);
             try
             {
                 //if (e.Client.Datagram.EndsWith("}")&& e.Client.Datagram.StartsWith("{"))

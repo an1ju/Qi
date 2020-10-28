@@ -28,9 +28,14 @@ namespace Qi.NetFly.Core
         /// 多个户端客：连接到此计算机的通信配置信息
         /// </summary>
         private List<ClientConfig> All_clientList_Config = new List<ClientConfig>();
-
+        /// <summary>
+        /// 从客户端的配置信息，进行的端口监听。
+        /// </summary>
         private List<ServicePort> PortsForListing = new List<ServicePort>();
-
+        /// <summary>
+        /// 为外网用户预留的端口
+        /// </summary>
+        private ushort[] WhatWeHavePortsForCustomer = new ushort[] { 9966, 8868, 9205 };
 
 
         /// <summary>
@@ -445,16 +450,16 @@ namespace Qi.NetFly.Core
 
         private ushort MakePortForClient()
         {
-            ushort[] WhatWeHave = new ushort[] { 9966, 8868, 9205 };
+            
 
             int index = -1;
             //查询一下当前没被占用的端口
-            for (int i = 0; i < WhatWeHave.Length; i++)
+            for (int i = 0; i < WhatWeHavePortsForCustomer.Length; i++)
             {
                 bool thisCanUse = true;
                 for (int iPorts = 0; iPorts < PortsForListing.Count; iPorts++)
                 {
-                    if (PortsForListing[iPorts].Port.Port== WhatWeHave[i])
+                    if (PortsForListing[iPorts].Port.Port== WhatWeHavePortsForCustomer[i])
                     {
                         thisCanUse = false;
                         break;
@@ -472,7 +477,7 @@ namespace Qi.NetFly.Core
                 }
             }
 
-            return WhatWeHave[index];
+            return WhatWeHavePortsForCustomer[index];
         }
 
         #region 内部开放端口事件
@@ -539,6 +544,12 @@ namespace Qi.NetFly.Core
 
 
         private SignIn singIn = new SignIn();
+        /// <summary>
+        /// 向外网用户转发数据。
+        /// 数据来源是外网用户发过来的请求，从服务器端提交到客户端处理，然后拿回来的数据。
+        /// 在这里转发 回送给外网用户
+        /// </summary>
+        /// <param name="clientZhuanFa"></param>
         private void ShuJuHuiFa(ClientConfig clientZhuanFa)
         {
             //1.找msgID
@@ -558,6 +569,7 @@ namespace Qi.NetFly.Core
 
                     //svr.Send(singIn.TongXunLu[i].Session, clientZhuanFa.TransportToService.Content);
                     //singIn.Remove(clientZhuanFa.TransportToService.MsgID);
+                    
                     singIn.TongXunLu.RemoveAt(i);
                     break;
 
