@@ -138,10 +138,9 @@ namespace Qi.NetFly.Core
             cli.Close();
         }
 
-        List<string> cc = new List<string>();
+
         private void RecvData(object sender, NetEventArgs e)
         {
-            cc.Add(e.Client.Datagram);
             try
             {
                 //if (e.Client.Datagram.EndsWith("}")&& e.Client.Datagram.StartsWith("{"))
@@ -180,6 +179,7 @@ namespace Qi.NetFly.Core
                 case MessageType.WEB:
                     {
                         TcpCli client = new TcpCli(new Coder(Coder.EncodingMothord.UTF8));
+                        client.Resovlver = new DatagramResolver("</html>");
                         client.ReceivedDatagram += new NetEvent(ccRecvData);
                         client.DisConnectedServer += new NetEvent(ccClientClose);
                         client.ConnectedServer += new NetEvent(ccClientConn);
@@ -223,6 +223,13 @@ namespace Qi.NetFly.Core
         {
             if (singIn.TongXunLu.Count > 0)
             {
+                for (int i = 0; i < singIn.TongXunLu.Count; i++)
+                {
+                    //if (singIn.TongXunLu[i].ClientSession.)
+                    //{
+
+                    //}
+                }
                 This_clientConfig.TransportToService = new TransportToService();
                 This_clientConfig.TransportToService.MsgID = singIn.TongXunLu[0].MsgID;
                 This_clientConfig.TransportToService.Content = e.Client.Datagram;

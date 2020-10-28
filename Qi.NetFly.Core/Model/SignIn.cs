@@ -30,6 +30,18 @@ namespace Qi.NetFly.Core.Model
                 if (TongXunLu[i].MsgID == MsgID)
                 {
                     TongXunLu.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+        public void Remove(Session customerSession)
+        {
+            for (int i = 0; i < TongXunLu.Count; i++)
+            {
+                if (TongXunLu[i].CustomerSession.ID == customerSession.ID)
+                {
+                    TongXunLu.RemoveAt(i);
+                    break;
                 }
             }
         }

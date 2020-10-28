@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qi.NetFly", "Qi.NetFly\Qi.NetFly.csproj", "{575C6E54-CE16-4D4D-8CE2-1291D5C86A69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qi.NetFly", "Qi.NetFly\Qi.NetFly.csproj", "{575C6E54-CE16-4D4D-8CE2-1291D5C86A69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qi.NetFly.Core", "Qi.NetFly.Core\Qi.NetFly.Core.csproj", "{8C83738F-3A61-4383-A4A3-C612FE63EA6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qi.NetFly.Core", "Qi.NetFly.Core\Qi.NetFly.Core.csproj", "{8C83738F-3A61-4383-A4A3-C612FE63EA6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest_Qi_NetFly_Core", "UnitTest_Qi_NetFly_Core\UnitTest_Qi_NetFly_Core.csproj", "{3EFD40D4-0306-4F90-853D-1911A1063964}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest_Qi_NetFly_Core", "UnitTest_Qi_NetFly_Core\UnitTest_Qi_NetFly_Core.csproj", "{3EFD40D4-0306-4F90-853D-1911A1063964}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qi.NetFly.TcpCSFramework", "Qi.NetFly.TcpCSFramework\Qi.NetFly.TcpCSFramework.csproj", "{635EF754-279E-4F7C-B232-189AC95194E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qi.NetFly.TcpCSFramework", "Qi.NetFly.TcpCSFramework\Qi.NetFly.TcpCSFramework.csproj", "{635EF754-279E-4F7C-B232-189AC95194E5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4CAF922F-8072-45AE-823C-96A1773C9606}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,7 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{08C77A55-DFB2-437D-9CE0-CF7F0BEEC0C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qi.NetFly.Client", "Qi.NetFly.Client\Qi.NetFly.Client.csproj", "{C3E3D031-B4EB-4ECC-94CE-7D7C0697A78A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qi.NetFly.Client", "Qi.NetFly.Client\Qi.NetFly.Client.csproj", "{C3E3D031-B4EB-4ECC-94CE-7D7C0697A78A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OmegaIDEA", "OmegaIDEA\OmegaIDEA.csproj", "{3979C8C9-562A-4607-BDD6-4EF4B3E01B22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{C3E3D031-B4EB-4ECC-94CE-7D7C0697A78A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3E3D031-B4EB-4ECC-94CE-7D7C0697A78A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3E3D031-B4EB-4ECC-94CE-7D7C0697A78A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3979C8C9-562A-4607-BDD6-4EF4B3E01B22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3979C8C9-562A-4607-BDD6-4EF4B3E01B22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3979C8C9-562A-4607-BDD6-4EF4B3E01B22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3979C8C9-562A-4607-BDD6-4EF4B3E01B22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

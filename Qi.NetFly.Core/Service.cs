@@ -495,6 +495,7 @@ namespace Qi.NetFly.Core
         private void clientClientClose(object sender, NetEventArgs e)
         {
             //throw new NotImplementedException();
+            singIn.Remove(e.Client);
         }
 
         private void clientRecvData(object sender, NetEventArgs e)
@@ -542,7 +543,9 @@ namespace Qi.NetFly.Core
         }
         #endregion
 
-
+        /// <summary>
+        /// 签到
+        /// </summary>
         private SignIn singIn = new SignIn();
         /// <summary>
         /// 向外网用户转发数据。
