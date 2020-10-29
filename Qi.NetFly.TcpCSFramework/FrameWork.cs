@@ -583,7 +583,7 @@ namespace Qi.NetFly.TcpCSFramework
         /// <summary>
         /// 接收数据缓冲区大小64K
         /// </summary>
-        public const int DefaultBufferSize = 1024;
+        public const int DefaultBufferSize = 1024 * 64;
 
         /// <summary>
         /// 报文解析器

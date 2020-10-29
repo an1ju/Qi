@@ -1,9 +1,11 @@
 ﻿using Qi.NetFly.Core.Model;
+using Qi.NetFly.Core.Tools;
 using Qi.NetFly.TcpCSFramework;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using System.Timers;
 
 namespace Qi.NetFly.Core
@@ -151,7 +153,7 @@ namespace Qi.NetFly.Core
 
                     singIn.Add(e.Client, temp.MsgID, null);
                     // 收到消息，要进行处理
-                    Dispatch(temp);
+                    Dispatch(temp, temp.MsgID);
 
 
                 }
@@ -172,31 +174,58 @@ namespace Qi.NetFly.Core
         /// 处理消息
         /// </summary>
         /// <param name="temp"></param>
-        private void Dispatch(MessageForClient customer)
+        private void Dispatch(MessageForClient customer,string msgID)
         {
             switch (customer.MessageType)
             {
                 case MessageType.WEB:
                     {
-                        TcpCli client = new TcpCli(new Coder(Coder.EncodingMothord.UTF8));
-                        client.Resovlver = new DatagramResolver("</html>");
-                        client.ReceivedDatagram += new NetEvent(ccRecvData);
-                        client.DisConnectedServer += new NetEvent(ccClientClose);
-                        client.ConnectedServer += new NetEvent(ccClientConn);
-
-                        if (!client.IsConnected)
+                        Socket customerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                        IPEndPoint iep = new IPEndPoint(IPAddress.Parse(customer.IP), customer.Port);
+                        try
                         {
-                            client.Connect(customer.IP, customer.Port);
-                            //System.Threading.Thread.Sleep(500);
+                            
+                            customerSocket.Connect(iep);
+
+
+                            Task.Run(() =>
+                            {
+                                (new AsyncSocketSwap(cli.ClientSession.ClientSocket, customerSocket, This_clientConfig, msgID))
+                                    .BeforeSwap(() => { if (customer.Content != null) customerSocket.Send((new Coder(Coder.EncodingMothord.UTF8)).GetEncodingBytes(customer.Content)); })
+                                    .StartSwap();
+                            });
                         }
-
-
-                        int run1ci = 0;
-                        while (!client.IsConnected)
+                        catch (Exception ex)
                         {
-                            System.Threading.Thread.Sleep(10);
+
+                            //
                         }
-                        client.Send(customer.Content);
+                        
+
+
+                        #region 停用
+
+
+                        //TcpCli client = new TcpCli(new Coder(Coder.EncodingMothord.UTF8));
+                        //client.Resovlver = new DatagramResolver("</html>");
+                        //client.ReceivedDatagram += new NetEvent(ccRecvData);
+                        //client.DisConnectedServer += new NetEvent(ccClientClose);
+                        //client.ConnectedServer += new NetEvent(ccClientConn);
+
+                        //if (!client.IsConnected)
+                        //{
+                        //    client.Connect(customer.IP, customer.Port);
+                        //    //System.Threading.Thread.Sleep(500);
+                        //}
+
+
+                        //int run1ci = 0;
+                        //while (!client.IsConnected)
+                        //{
+                        //    System.Threading.Thread.Sleep(10);
+                        //}
+                        //client.Send(customer.Content);
+                        #endregion
 
                     }
                     break;
@@ -209,45 +238,52 @@ namespace Qi.NetFly.Core
             }
         }
 
-        private void ccClientConn(object sender, NetEventArgs e)
-        {
-            
-        }
 
-        private void ccClientClose(object sender, NetEventArgs e)
-        {
-            e.Client.Close();
-        }
 
-        private void ccRecvData(object sender, NetEventArgs e)
-        {
-            if (singIn.TongXunLu.Count > 0)
-            {
-                for (int i = 0; i < singIn.TongXunLu.Count; i++)
-                {
-                    //if (singIn.TongXunLu[i].ClientSession.)
-                    //{
 
-                    //}
-                }
-                This_clientConfig.TransportToService = new TransportToService();
-                This_clientConfig.TransportToService.MsgID = singIn.TongXunLu[0].MsgID;
-                This_clientConfig.TransportToService.Content = e.Client.Datagram;
+        #region 停用
 
-                try
-                {
-                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(This_clientConfig);
-                    cli.Send(json);
-                    This_clientConfig.TransportToService = null;
-                }
-                catch (Exception ex)
-                {
+        //private void ccClientConn(object sender, NetEventArgs e)
+        //{
 
-                    throw;
-                }
+        //}
 
-                singIn.TongXunLu.RemoveAt(0);
-            }
-        }
+        //private void ccClientClose(object sender, NetEventArgs e)
+        //{
+        //    e.Client.Close();
+        //}
+
+        //private void ccRecvData(object sender, NetEventArgs e)
+        //{
+        //    if (singIn.TongXunLu.Count > 0)
+        //    {
+        //        for (int i = 0; i < singIn.TongXunLu.Count; i++)
+        //        {
+        //            //if (singIn.TongXunLu[i].ClientSession.)
+        //            //{
+
+        //            //}
+        //        }
+        //        This_clientConfig.TransportToService = new TransportToService();
+        //        This_clientConfig.TransportToService.MsgID = singIn.TongXunLu[0].MsgID;
+        //        This_clientConfig.TransportToService.Content = e.Client.Datagram;
+
+        //        try
+        //        {
+        //            string json = Newtonsoft.Json.JsonConvert.SerializeObject(This_clientConfig);
+        //            cli.Send(json);
+        //            This_clientConfig.TransportToService = null;
+        //        }
+        //        catch (Exception ex)
+        //        {
+
+        //            throw;
+        //        }
+
+        //        singIn.TongXunLu.RemoveAt(0);
+        //    }
+        //}
+        #endregion
+
     }
 }
