@@ -13,7 +13,7 @@ namespace NewLife.Qi.NetFly.Model
         /// <summary>
         /// 服务器IP
         /// </summary>
-        public string Service_IP { get; set; } = "192.168.99.93";
+        public string Service_IP { get; set; } = "192.168.31.29";
         /// <summary>
         /// 服务器端口号
         /// </summary>

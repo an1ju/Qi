@@ -49,14 +49,14 @@ namespace NewLife.Qi.NetFly
             Qi_LAN_Setting temp1 = new Qi_LAN_Setting();
             temp1.Type = ConnectType.WEB;
             temp1.Note = "我的测试网站";
-            temp1.IP = "192.168.99.93";
-            temp1.Port = 5002;
+            temp1.IP = "192.168.31.29";
+            temp1.Port = 80;
             This_client_Config.LAN_list.Add(temp1);
 
             Qi_LAN_Setting temp2 = new Qi_LAN_Setting();
             temp2.Type = ConnectType.WEB;
             temp2.Note = "公司电脑远程桌面";
-            temp2.IP = "192.168.99.93";
+            temp2.IP = "192.168.31.29";
             temp2.Port = 3389;
             This_client_Config.LAN_list.Add(temp2);
         }
@@ -107,7 +107,7 @@ namespace NewLife.Qi.NetFly
                     case MessageType.SERVER_TO_CLIENT_FOR_CUSTOMER:
                         {
                             // 把 temp.CustomerData 解析出来
-                            //string CustomerData = Encoding.UTF8.GetString(temp.CustomerData, 0, temp.CustomerData.Length);
+                            string CustomerData = Encoding.UTF8.GetString(temp.CustomerData, 0, temp.CustomerData.Length);
 
                             //在本客户端中再创建一个客户端，去连接内网设备
                             {
@@ -119,16 +119,17 @@ namespace NewLife.Qi.NetFly
                                 ns.Write(temp.CustomerData, 0, temp.CustomerData.Length);//发送
                                 var buf = new Byte[1024 * 64];
                                 var rs = ns.Read(buf, 0, buf.Length);//回收
-                                string Lan_Data = Encoding.UTF8.GetString(buf, 0, 10554);//内网回发的数据报文内容
+                                string Lan_Data = Encoding.UTF8.GetString(buf, 0, rs);//内网回发的数据报文内容
 
 
                                 //修改消息
 
                                 temp.MessageType = MessageType.CLIENT_TO_SERVER_FOR_CUSTOMER;
                                 //temp.LAN_list_ClientSettings = new Qi_LAN_Setting[temp.CustomerData.Length];                                
-                                temp.CustomerData = new byte[] { 1, 3, 4, 5, 6, 7 }; //Lan_Data.GetBytes(Encoding.UTF8);
+                                temp.CustomerData = Lan_Data.GetBytes(Encoding.UTF8);
                                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(temp);
-                                byte[] vv = new byte[] { 1, 3, 4, 5, 6, 7 };//json.GetBytes();
+                                byte[] vv = json.GetBytes();
+                                //new byte[] { 1, 3, 4, 5, 6, 7 }; //
 
                                 socketClient.Send(json.GetBytes());//发送
                             }

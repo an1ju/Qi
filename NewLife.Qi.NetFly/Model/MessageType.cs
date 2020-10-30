@@ -59,6 +59,15 @@ namespace NewLife.Qi.NetFly.Model
         /// <summary>
         /// 外网连接信息
         /// </summary>
+        public string CustomerSession_MsgID { get; set; }
+    }
+
+    public class Sing
+    {
+        public string CustomerSession_MsgID { get; set; }
+        /// <summary>
+        /// 外网用户链接到服务器，记录下来，数据转一圈从服务器回来再发到这里。
+        /// </summary>
         public INetSession CustomerSession { get; set; }
     }
 }

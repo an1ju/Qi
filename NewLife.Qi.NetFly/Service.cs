@@ -31,6 +31,13 @@ namespace NewLife.Qi.NetFly
 
         private List<int> PortsHaveBeenUsed = new List<int>();
 
+        /// <summary>
+        /// 签到表：
+        /// 谁发来的数据，外网
+        /// 做个记号，等数据回来，发送到这里。
+        /// </summary>
+        private List<Sing> SingList = new List<Sing>();
+
 
         public Service()
         {
@@ -141,6 +148,16 @@ namespace NewLife.Qi.NetFly
                 case MessageType.CLIENT_TO_SERVER_FOR_CUSTOMER:
                     {
                         string CustomerData = Encoding.UTF8.GetString(message.CustomerData, 0, message.CustomerData.Length);
+                        //现在，我就差把message.CustomerData 这个数据发到刚刚的那个外网链接上就可以了。
+                        for (int i = 0; i < SingList.Count; i++)
+                        {
+                            if (SingList[i].CustomerSession_MsgID == message.CustomerSession_MsgID)
+                            {
+                                SingList[i].CustomerSession.Send(message.CustomerData);
+                                SingList.RemoveAt(i);
+                                break;
+                            }
+                        }
                     }
                     break;
                 default:
@@ -193,7 +210,11 @@ namespace NewLife.Qi.NetFly
             }
             else
             {
-                //更新流程
+                //更新流程：2020年10月30日 23点12分 这个还没做，别忘了。
+
+
+
+
             }
 
         }
@@ -220,7 +241,9 @@ namespace NewLife.Qi.NetFly
                 //制作消息
                 Qi_NETFLY_Message message = new Qi_NETFLY_Message();
                 message.MessageType = MessageType.SERVER_TO_CLIENT_FOR_CUSTOMER;
-                //message.CustomerSession = customerInService;
+                message.CustomerSession_MsgID = Guid.NewGuid().ToString(); //customerInService;
+
+                SingList.Add(new Sing() { CustomerSession_MsgID = message.CustomerSession_MsgID,CustomerSession= customerInService });
 
                 //从端口号判定，应该发送到哪个客户端。
                 INetSession clientSession = null;
