@@ -63,7 +63,7 @@ namespace NewLife.Qi.NetFly
                 };
 
                 
-                svr.Received += (s, e) =>
+                svr.Received += (s, e) => //这里有一点问题。报文长度。的事情。2020年10月30日16:57:30
                 {
                     var clientInService = s as INetSession; //我把这个叫做客户端连接进来的身份
 
