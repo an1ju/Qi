@@ -126,11 +126,11 @@ namespace NewLife.Qi.NetFly
 
                                 temp.MessageType = MessageType.CLIENT_TO_SERVER_FOR_CUSTOMER;
                                 //temp.LAN_list_ClientSettings = new Qi_LAN_Setting[temp.CustomerData.Length];                                
-                                temp.CustomerData = Lan_Data.GetBytes(Encoding.UTF8);
+                                temp.CustomerData = new byte[] { 1, 3, 4, 5, 6, 7 }; //Lan_Data.GetBytes(Encoding.UTF8);
                                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(temp);
                                 byte[] vv = new byte[] { 1, 3, 4, 5, 6, 7 };//json.GetBytes();
 
-                                socketClient.Send(buf);//发送
+                                socketClient.Send(json.GetBytes());//发送
                             }
                         }
                         break;

@@ -75,6 +75,7 @@ namespace NewLife.Qi.NetFly
                     string RecvData = Encoding.UTF8.GetString(e.Packet.Data, 0, e.Packet.Count);
                     try
                     {
+                        
                         Qi_NETFLY_Message temp = Newtonsoft.Json.JsonConvert.DeserializeObject<Qi_NETFLY_Message>(RecvData);
 
                         
