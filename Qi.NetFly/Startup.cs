@@ -20,7 +20,7 @@ namespace Qi.NetFly
         {
             services.AddControllers();
 
-            services.AddSingleton(new Qi.NetFly.Core.Service()); // 直接注入实例
+            services.AddSingleton(new NewLife.Qi.NetFly.Service()); // 直接注入实例
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

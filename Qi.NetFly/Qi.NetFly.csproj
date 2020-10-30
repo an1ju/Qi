@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Qi.NetFly.Core\Qi.NetFly.Core.csproj" />
+    <ProjectReference Include="..\NewLife.Qi.NetFly\NewLife.Qi.NetFly.csproj" />
   </ItemGroup>
 
 

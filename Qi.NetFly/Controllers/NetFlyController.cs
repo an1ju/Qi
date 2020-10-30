@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Qi.NetFly.Core;
+using NewLife.Qi.NetFly;
 using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,7 +12,7 @@ namespace Qi.NetFly.Controllers
     {
         private readonly Service s; // 服务就在这里啦
 
-        public NetFlyController(Qi.NetFly.Core.Service s)
+        public NetFlyController(NewLife.Qi.NetFly.Service s)
         {
             this.s = s;
         }
@@ -20,7 +20,7 @@ namespace Qi.NetFly.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "Yes", "You can fly on net.", s.ServiceIsRun().ToString() };
+            return new string[] { "Yes", "You can fly on net." };
         }
 
         #region 常用方法接口

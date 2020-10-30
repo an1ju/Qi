@@ -14,9 +14,9 @@ namespace Qi.NetFly.Controllers
     {
         // GET: api/<AboutController>
         [HttpGet]
-        public IEnumerable<Qi.NetFly.Core.Model.Author> Get()
+        public IEnumerable<NewLife.Qi.NetFly.Model.Author> Get()
         {
-            return new Qi.NetFly.Core.Model.Author[] { new Qi.NetFly.Core.Model.Author() };
+            return new NewLife.Qi.NetFly.Model.Author[] { new NewLife.Qi.NetFly.Model.Author() };
         }
 
 

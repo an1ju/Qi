@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NewLife.Qi.NetFly\NewLife.Qi.NetFly.csproj" />
     <ProjectReference Include="..\Qi.NetFly.Core\Qi.NetFly.Core.csproj" />
     <ProjectReference Include="..\Qi.NetFly.TcpCSFramework\Qi.NetFly.TcpCSFramework.csproj" />
   </ItemGroup>

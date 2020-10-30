@@ -15,7 +15,8 @@ namespace Qi.NetFly.Client
             try
             {
 
-                Qi.NetFly.Core.Client client = new Core.Client();
+                //Qi.NetFly.Core.Client client = new Core.Client();
+                NewLife.Qi.NetFly.Client client = new NewLife.Qi.NetFly.Client();
             }
             catch (Exception ee)
             {
