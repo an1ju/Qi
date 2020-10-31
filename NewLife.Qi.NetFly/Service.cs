@@ -36,6 +36,7 @@ namespace NewLife.Qi.NetFly
         /// 签到表：
         /// 谁发来的数据，外网
         /// 做个记号，等数据回来，发送到这里。
+        /// 使用 CustomerSession_MsgID 认领
         /// </summary>
         private List<Sing> SingList = new List<Sing>();
 
