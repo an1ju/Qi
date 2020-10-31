@@ -17,7 +17,7 @@ namespace NewLife.Qi.NetFly.Model
         /// <summary>
         /// 端口号
         /// </summary>
-        public ushort ServicePort { get; set; } = 2020;        
+        public ushort ServicePort { get; set; } = 9877;        
         /// <summary>
         /// 服务启动时，是否自动启动监控服务：默认自动
         /// </summary>
@@ -26,7 +26,7 @@ namespace NewLife.Qi.NetFly.Model
         /// <summary>
         /// 为外网用户提供的端口，按需分配。
         /// </summary>
-        public ushort[] WhatWeHavePortsForCustomer { get; set; } = new ushort[] { 9966, 8868, 9205 };
+        public ushort[] WhatWeHavePortsForCustomer { get; set; } = new ushort[] { 2020, 8868, 9205 };
     }
 
     public class PortManager_For_Customer

@@ -17,7 +17,7 @@ namespace NewLife.Qi.NetFly.Model
         /// <summary>
         /// 服务器端口号
         /// </summary>
-        public int Service_Port { get; set; } = 2020;
+        public int Service_Port { get; set; } = 9877;
 
         /// <summary>
         /// 局域网信息列表

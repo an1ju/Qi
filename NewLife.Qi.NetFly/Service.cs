@@ -75,7 +75,7 @@ namespace NewLife.Qi.NetFly
                 svr.Received += (s, e) => //这里有一点问题。报文长度。的事情。2020年10月30日16:57:30
                 {
                     var clientInService = s as INetSession; //我把这个叫做客户端连接进来的身份
-
+                    
                     //这样就能给客户端发送数据 屏蔽掉，先不用。
                     //clientInService.Send(new byte[] { 1, 2, 3 });
 
@@ -209,13 +209,85 @@ namespace NewLife.Qi.NetFly
             else
             {
                 //更新流程：2020年10月30日 23点12分 这个还没做，别忘了。
+                PortsForListing[keyIndex].SecretKey = message.Key;
+                PortsForListing[keyIndex].ServerForClient = clientInService;
 
-
+                ChaYiGengXin_ClientLanSettings(ref PortsForListing[keyIndex].ServicePort_Setting_List, message.LAN_list_ClientSettings);
 
 
             }
 
         }
+
+        /// <summary>
+        /// 差异更新：相同的不做操作
+        /// </summary>
+        /// <param name="_old"></param>
+        /// <param name="_new"></param>
+        private void ChaYiGengXin_ClientLanSettings(ref List<ServicePort_Setting> _old, Qi_LAN_Setting[] _new)
+        {
+            if (_old.Count < _new.Length)
+            {
+                //数量增多了
+                for (int i = _old.Count; i < _new.Length; i++)
+                {
+                    ServicePort_Setting portItem = new ServicePort_Setting();
+                    portItem.IP = _new[i].IP;
+                    portItem.Port = _new[i].Port;
+                    portItem.Type = _new[i].Type;
+                    portItem.Note = _new[i].Note;
+
+                    int portForCustomer = FenPeiPortForCustomer();
+                    portItem.OpenPort_In_Service_For_Customer = portForCustomer;
+
+                    //端口已经分配好了，除了 -1 的情况，都应该可以分配，并制作成监听。
+                    portItem.ServerForCustomer = MakeCustomerListenPort(portForCustomer);
+
+                    _old.Add(portItem);
+                }
+            }
+            else if (_old.Count == _new.Length)
+            {
+                //数量相同，主要更新在这里进行。注意：原数据相同就不更新。
+                for (int i = 0; i < _old.Count; i++)
+                {
+                    if (_old[i].IP == _new[i].IP && _old[i].Port == _new[i].Port && _old[i].Type == _new[i].Type && _old[i].Note == _new[i].Note)
+                    {
+                        //完全相同，就不改变了。
+                    }
+                    else
+                    {
+                        // 有变化，更新一下。
+                        _old[i].IP = _new[i].IP;
+                        _old[i].Port = _new[i].Port;
+                        _old[i].Type = _new[i].Type;
+                        _old[i].Note = _new[i].Note;
+                        //注意：已经开放的端口不做改变。
+                    }
+                    
+                }
+            }
+            else if (_old.Count > _new.Length)
+            {
+                //数量减少了，把过多的端口释放掉。如果更新，等这步骤完事后，在相同数量时处理。
+                for (int i = _new.Length; i > _old.Count; i--)
+                {
+                    _old[i].ServerForCustomer.Stop("配置减少");
+                    _old[i].ServerForCustomer.Dispose();
+                    for (int iUsedPort = 0; iUsedPort < PortsHaveBeenUsed.Count; iUsedPort++)
+                    {
+                        if (PortsHaveBeenUsed[iUsedPort] == _old[i].OpenPort_In_Service_For_Customer) //把已用端口标识去掉 这个刚刚释放的。
+                        {
+                            PortsHaveBeenUsed.RemoveAt(iUsedPort);
+                        }
+                    }
+
+                    
+                    _old.RemoveAt(i);
+                }
+            }
+        }
+
         /// <summary>
         /// 监听外网消息
         /// </summary>
@@ -381,6 +453,32 @@ namespace NewLife.Qi.NetFly
             return svr.SessionCount;
         }
 
+        /// <summary>
+        /// 通过key，查询自己在服务器的配置以及分配的端口信息。
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public PortManager_For_Customer GetClientInServer_PortsForListing(string key)
+        {
+            int index = -1;
+            for (int i = 0; i < PortsForListing.Count; i++)
+            {
+                if (PortsForListing[i].SecretKey == key)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index == -1)
+            {
+                return null;
+            }
+            else
+            {
+                return PortsForListing[index];
+            }
+        }
 
 
         #endregion
