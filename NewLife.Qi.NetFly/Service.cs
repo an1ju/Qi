@@ -3,6 +3,7 @@ using NewLife.Net;
 using NewLife.Qi.NetFly.Model;
 using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
 
 namespace NewLife.Qi.NetFly
@@ -84,14 +85,8 @@ namespace NewLife.Qi.NetFly
                     {
                         
                         Qi_NETFLY_Message temp = Newtonsoft.Json.JsonConvert.DeserializeObject<Qi_NETFLY_Message>(RecvData);
-
-                        
+                                                
                         DealMessages(clientInService, ref temp);//处理消息
-
-                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(temp);
-                        byte[] replyMessage = json.GetBytes();
-                        clientInService.Send(replyMessage);//回复消息
-
                     }
                     catch (Exception ex)
                     {
@@ -138,7 +133,9 @@ namespace NewLife.Qi.NetFly
                         message.MessageType = MessageType.SERVER_ANSWER;
                         message.AnswerMsg = "配置信息已收到";
                         message.LAN_list_ClientSettings = null;//回发消息不需要带着这些
-
+                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(message);
+                        byte[] replyMessage = json.GetBytes();
+                        clientInService.Send(replyMessage);//回复消息
                     }
                     break;
                 case MessageType.SERVER_ANSWER:
@@ -243,13 +240,13 @@ namespace NewLife.Qi.NetFly
                 message.MessageType = MessageType.SERVER_TO_CLIENT_FOR_CUSTOMER;
                 message.CustomerSession_MsgID = Guid.NewGuid().ToString(); //customerInService;
 
-                SingList.Add(new Sing() { CustomerSession_MsgID = message.CustomerSession_MsgID,CustomerSession= customerInService });
+                SingList.Add(new Sing() { CustomerSession_MsgID = message.CustomerSession_MsgID, CustomerSession = customerInService });
 
                 //从端口号判定，应该发送到哪个客户端。
                 INetSession clientSession = null;
-                int index = GetClientSession_Index_From_PortsForListing(customerInService.Host.Local.Port,ref message);
+                int index = GetClientSession_Index_From_PortsForListing(customerInService.Host.Local.Port, ref message);
 
-                
+
 
                 if (index == -1)
                 {
@@ -263,12 +260,13 @@ namespace NewLife.Qi.NetFly
                 if (clientSession != null)
                 {
                     //补充消息                   
-                    message.CustomerData = e.Packet.Data;                    
+                    message.CustomerData = e.Packet.Data;
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(message);
 
                     byte[] replyMessage = json.GetBytes();
                     clientSession.Send(replyMessage); // 转发过去给客户端
                 }
+
                 
 
             };

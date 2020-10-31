@@ -22,7 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseThis", "UseThis", "{341F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLife.Core", "NewLife.Core\NewLife.Core.csproj", "{100A4DE6-47FC-4894-9C02-84A079A70AC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewLife.Qi.NetFly", "NewLife.Qi.NetFly\NewLife.Qi.NetFly.csproj", "{F94143B3-8E35-4A77-919E-DA0C734D0AD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLife.Qi.NetFly", "NewLife.Qi.NetFly\NewLife.Qi.NetFly.csproj", "{F94143B3-8E35-4A77-919E-DA0C734D0AD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestNeiWang", "TestNeiWang\TestNeiWang.csproj", "{BF4B2D73-ACA6-4F5F-A483-7EA816603DD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +56,10 @@ Global
 		{F94143B3-8E35-4A77-919E-DA0C734D0AD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F94143B3-8E35-4A77-919E-DA0C734D0AD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F94143B3-8E35-4A77-919E-DA0C734D0AD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF4B2D73-ACA6-4F5F-A483-7EA816603DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF4B2D73-ACA6-4F5F-A483-7EA816603DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF4B2D73-ACA6-4F5F-A483-7EA816603DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF4B2D73-ACA6-4F5F-A483-7EA816603DD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 		{C3E3D031-B4EB-4ECC-94CE-7D7C0697A78A} = {08C77A55-DFB2-437D-9CE0-CF7F0BEEC0C1}
 		{100A4DE6-47FC-4894-9C02-84A079A70AC5} = {341F67C6-4875-4BC6-B131-F510766E7990}
 		{F94143B3-8E35-4A77-919E-DA0C734D0AD7} = {341F67C6-4875-4BC6-B131-F510766E7990}
+		{BF4B2D73-ACA6-4F5F-A483-7EA816603DD7} = {08C77A55-DFB2-437D-9CE0-CF7F0BEEC0C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11C1DD2F-0692-401D-A913-9EF69DC0D003}
